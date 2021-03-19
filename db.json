@@ -1,0 +1,30 @@
+{
+  "products": [
+    
+    {
+      "image": "sofa.svg",
+      "name": "sofa",
+      "price": 150,
+      "article": "T2",
+      "available": true
+      
+    },
+    {
+      "image": "armchair.svg",
+      "name": "armchair",
+      "price": 200,
+      "article": "T3",
+      "available": false
+      
+    },
+    {
+      "image": "bookshelf.svg",
+      "name": "bookshelf",
+      "price": 300,
+      "article": "T4",
+      "available": true
+      
+    }
+    
+  ]
+}
