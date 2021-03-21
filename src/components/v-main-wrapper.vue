@@ -4,25 +4,36 @@
       <div class="rectangle">
         <div class="question"><p>Задать вопрос</p></div>
 
-      <form>
+      
         <input 
         type="text" 
+        required
         placeholder="Фамилия Имя Отчество *"
-        v-model="name">
+        v-model="ame">
+        
+
+
+       <div class="phoneInput">
        
        <input 
         type="text" 
+        required
         placeholder="Телефон *"
         v-model="phone">
+       </div>
         
+
+
+
         <input 
         type="text" 
+        required
         placeholder="Email"
-        v-model="eMail">
+        v-model="email">
 
-        <button @click="sendData">ОТПРАВИТЬ ЗАПРОС</button>
+        <button type ="submit" @click="sendData">ОТПРАВИТЬ ЗАПРОС</button>
 
-        </form>
+        
 
 
 
@@ -51,9 +62,10 @@ export default {
     props: {},
     data() {
         return {
+                focused: false,
                 name: '',
                 phone: '',
-                eMail: ''  
+                email: ''  
         }
     },
     computed: {
@@ -61,15 +73,18 @@ export default {
     },
      methods: {
          sendData() {
-             axios.post('https://digital-spectr.com/ac/academy.php', {name: this.name, phone: this.phone, eMail: this.eMail})
+           axios.defaults.headers.common['Authorization'] = 5611057;
+             axios.post('https://digital-spectr.com/ac/academy.php',  {name: this.name, phone: this.phone, email: this.email})
              .then(response => {
-                 console.log(response)
+                console.log(response)
              })
              .catch((error) => {
                 console.log(error)
                 return error;
             })
-         }       
+         },
+           
+    
      }
 }
 
@@ -86,9 +101,17 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 .v-main-wrapper {
+  border: 1px solid green;
+   //display: flex;
+  //justify-content: center;
+  //align-items: center;
+ 
+}
+.w-main-wrapper {
   width: 1024px;
   height: 768px;
   border: 1px solid green;
+ margin: auto;
 }
 .rectangle {
   width: 481px;
@@ -107,8 +130,7 @@ width: 168px;
 margin-left: 40px;
 margin-top: 40px;
 margin-bottom: 0px;
-  border: 1px solid khaki;
-  font-family: roboto;
+  font-family: Roboto;
   font-weight: 700;
   font-style: normal;
   font-size: 24px;
@@ -116,6 +138,7 @@ margin-bottom: 0px;
   color: #3B3D43;
 }
 input{
+  font-family: Roboto;
  padding: 0;
   width: 401px;
   height: 48px;
@@ -123,10 +146,29 @@ border: none;
 margin-top: 25px;
 margin-left: 40px;
 border-radius: 6px;
+font-size: 15px;
+line-height: 20px;
+color: #D0C9D6;
+
 }
+input:hover {
+ border: 1px solid #854FC8;
+}
+input:focus {
+  outline-color: #854FC8;
+}
+button:hover  {
+color: green ;
+}
+button:focus {
+  color: palevioletred;
+}
+input:invalid:not(:placeholder-shown) {border-color: red;}
+input:valid:not(:placeholder-shown) {border-color: green;}
+
 input[type=text] {
-  width: 386px;
-  padding-left: 15px;
+
+  padding-left: 14px;
  
 }
 button {
