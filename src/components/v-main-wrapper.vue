@@ -4,20 +4,30 @@
       <div class="rectangle">
         <div class="question"><p>Задать вопрос</p></div>
 
-      
-        <input 
-        type="text" 
-        required
-        placeholder="Фамилия Имя Отчество *"
-        v-model="ame">
-        
+      <form
+      @submit="checkForm"
+  action="https://digital-spectr.com/ac/academy.php"
+  method="post"
+  novalidate="true"
+      >
+    <input
+      id="name"
+      v-model="name"
+      type="text"
+      name="name"
+       placeholder="Фамилия Имя Отчество *"
+    >
+
+
+
 
 
        <div class="phoneInput">
-       
+
        <input 
-        type="text" 
-        required
+        type="phone" 
+        id="phone"
+        name="phone"
         placeholder="Телефон *"
         v-model="phone">
        </div>
@@ -26,18 +36,30 @@
 
 
         <input 
-        type="text" 
-        required
+        type="email" 
+        id="email"
         placeholder="Email"
-        v-model="email">
-
-        <button type ="submit" @click="sendData">ОТПРАВИТЬ ЗАПРОС</button>
-
+        v-model="email"
+        name="email"
+        >
         
+
+        <button>ОТПРАВИТЬ ЗАПРОС</button>
+        </form>
+
+    
 
 
 
       </div>
+      <div class="errors">
+    <p v-if="errors.length">
+    <b>Пожалуйста, исправьте указанные ошибки:</b>
+    <p 
+    v-for="error in errors"
+    :key="error.message"> {{error.message}}</p>
+      </div>
+  
 
     </div>
 
@@ -48,7 +70,7 @@
 
 
 <script>
-import axios from 'axios'
+
 
 
 
@@ -61,30 +83,67 @@ export default {
   
     props: {},
     data() {
-        return {
-                focused: false,
-                name: '',
-                phone: '',
-                email: ''  
+        return {  
+               errors: [],
+               
+    name: null,
+    email: null,
+    phone: null
+
         }
     },
     computed: {
       
     },
      methods: {
-         sendData() {
-           axios.defaults.headers.common['Authorization'] = 5611057;
-             axios.post('https://digital-spectr.com/ac/academy.php',  {name: this.name, phone: this.phone, email: this.email})
-             .then(response => {
-                console.log(response)
-             })
-             .catch((error) => {
-                console.log(error)
-                return error;
-            })
-         },
            
-    
+    checkForm: function (e) {
+      this.errors = [];
+
+      if (!this.name) {
+        this.errors.push({message:'Укажите имя.'});
+      } else if (!this.validName(this.name)) {
+        this.errors.push({message:'Укажите корректно ФИО.'});
+      }
+
+
+       if (!this.phone) {
+        this.errors.push({message:'Укажите номер телефона.'});
+      } else if (!this.validPhone(this.phone)) {
+        this.errors.push({message:'Укажите корректно номер телефона.'});
+      }
+
+
+      if (!this.email) {
+        this.errors.push({message:'Укажите электронную почту.'});
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push({message:'Укажите корректный адрес электронной почты.'});
+      }
+
+      if (!this.errors.length) {
+        return true;
+      }
+
+      e.preventDefault();
+    },
+    validEmail: function (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+  
+
+    validName: function (name) {
+      var re = /^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/;
+      return re.test(name);
+    },
+
+
+     validPhone: function (phone) {
+      var re = /^((8|\+7)[- ]?)?(\d{3}[- ]?)?[\d- ]{7,10}$/;
+      return re.test(phone);
+    },
+
+  
      }
 }
 
@@ -100,24 +159,18 @@ export default {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-.v-main-wrapper {
-  border: 1px solid green;
-   //display: flex;
-  //justify-content: center;
-  //align-items: center;
- 
-}
+
 .w-main-wrapper {
-  width: 1024px;
-  height: 768px;
-  border: 1px solid green;
- margin: auto;
+width: 1024px;
+height: 768px;
+padding-top: 31px;
+margin: auto;
 }
 .rectangle {
   width: 481px;
   height: 392px;
-  margin-top: 31px;
-  margin-left: 272px;
+ 
+  margin: auto;
   border-radius: 12px;
   background: #F7F5F9;
   filter: drop-shadow(5px 5px 15px rgba(0, 0, 0, 0.25));
@@ -138,7 +191,7 @@ margin-bottom: 0px;
   color: #3B3D43;
 }
 input{
-  font-family: Roboto;
+font-family: Roboto;
  padding: 0;
   width: 401px;
   height: 48px;
@@ -163,13 +216,16 @@ color: green ;
 button:focus {
   color: palevioletred;
 }
-input:invalid:not(:placeholder-shown) {border-color: red;}
-input:valid:not(:placeholder-shown) {border-color: green;}
+
 
 input[type=text] {
-
   padding-left: 14px;
- 
+}
+input[type=phone] {
+  padding-left: 14px;
+}
+input[type=email] {
+  padding-left: 14px;
 }
 button {
 width: 401px;
@@ -187,5 +243,12 @@ font-size: 17px;
 line-height: 22px;
 text-align: center;
 }
-
+.errors p{
+color: red;
+}
+.errors {
+margin: auto;
+width: 400px;
+padding-top: 20px
+}
 </style>
